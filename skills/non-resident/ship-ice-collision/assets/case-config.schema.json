@@ -1,0 +1,674 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openai.local/skills/ship-ice-collision/case-config.schema.json",
+  "title": "Standard ship-ice-water-air case configuration",
+  "description": "Reusable case interface. null marks unfilled template values; validate_case_config.py rejects missing required values outside draft mode.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case",
+    "software",
+    "geometry",
+    "ice",
+    "fluid",
+    "coupling",
+    "run",
+    "outputs",
+    "acceptance",
+    "provenance",
+    "extensions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "case": {
+      "$ref": "#/$defs/case"
+    },
+    "software": {
+      "$ref": "#/$defs/software"
+    },
+    "geometry": {
+      "$ref": "#/$defs/geometry"
+    },
+    "ice": {
+      "$ref": "#/$defs/ice"
+    },
+    "fluid": {
+      "$ref": "#/$defs/fluid"
+    },
+    "coupling": {
+      "$ref": "#/$defs/coupling"
+    },
+    "run": {
+      "$ref": "#/$defs/run"
+    },
+    "outputs": {
+      "$ref": "#/$defs/outputs"
+    },
+    "acceptance": {
+      "$ref": "#/$defs/acceptance"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Namespaced project extensions; core workflows must not rely on undeclared semantics.",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "nullableString": {
+      "type": ["string", "null"]
+    },
+    "nullableNumber": {
+      "type": ["number", "null"]
+    },
+    "nullableBoolean": {
+      "type": ["boolean", "null"]
+    },
+    "vector3": {
+      "type": ["array", "null"],
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "number"
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "mode", "status", "unit_system", "work_dir", "results_dir", "report_path"],
+      "properties": {
+        "id": {
+          "type": ["string", "null"],
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "title": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "mode": {
+          "type": ["string", "null"],
+          "enum": ["diagnostic", "verification", "formal", null]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "pending", "pass", "fail"]
+        },
+        "unit_system": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "work_dir": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "results_dir": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "report_path": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "software": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["solver", "preprocessor", "postprocessor"],
+      "properties": {
+        "solver": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["executable", "version", "precision", "parallel_mode", "ncpu", "memory", "manual_paths"],
+          "properties": {
+            "executable": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "version": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "precision": {
+              "type": ["string", "null"],
+              "enum": ["single", "double", null]
+            },
+            "parallel_mode": {
+              "type": ["string", "null"],
+              "enum": ["smp", "mpp", "hybrid", null]
+            },
+            "ncpu": {
+              "type": ["integer", "null"],
+              "minimum": 1
+            },
+            "memory": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "manual_paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            }
+          }
+        },
+        "preprocessor": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "postprocessor": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "uri", "version", "coordinate_system", "scale"],
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "uri": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "version": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "coordinate_system": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "scale": {
+          "$ref": "#/$defs/nullableNumber"
+        }
+      }
+    },
+    "mesh": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "target_size", "quality_thresholds"],
+      "properties": {
+        "strategy": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "target_size": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "quality_thresholds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": ["number", "integer", "boolean", "string"]
+          }
+        }
+      }
+    },
+    "geometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hull"],
+      "properties": {
+        "hull": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source", "physical_model", "open_deck", "mesh"],
+          "properties": {
+            "source": {
+              "$ref": "#/$defs/source"
+            },
+            "physical_model": {
+              "type": ["string", "null"],
+              "enum": ["rigid_shell", "deformable_shell", "full_structure", null]
+            },
+            "open_deck": {
+              "$ref": "#/$defs/nullableBoolean"
+            },
+            "mesh": {
+              "$ref": "#/$defs/mesh"
+            }
+          }
+        }
+      }
+    },
+    "ice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "generator", "field", "deformable", "mesh", "material"],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "generator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "version", "config_uri", "seed"],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "version": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "config_uri": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "seed": {
+              "type": ["integer", "null"]
+            }
+          }
+        },
+        "field": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["domain_min", "domain_max", "floe_count", "target_concentration", "size_distribution", "thickness_distribution"],
+          "properties": {
+            "domain_min": {
+              "$ref": "#/$defs/vector3"
+            },
+            "domain_max": {
+              "$ref": "#/$defs/vector3"
+            },
+            "floe_count": {
+              "type": ["integer", "null"],
+              "minimum": 1
+            },
+            "target_concentration": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "maximum": 1
+            },
+            "size_distribution": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "thickness_distribution": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "deformable": {
+          "$ref": "#/$defs/nullableBoolean"
+        },
+        "mesh": {
+          "$ref": "#/$defs/mesh"
+        },
+        "material": {
+          "type": "object",
+          "required": ["model", "parameters", "failure"],
+          "properties": {
+            "model": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "failure": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "fluidMaterial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role", "name", "material_model", "eos_model", "parameters"],
+      "properties": {
+        "id": {
+          "type": ["string", "integer", "null"]
+        },
+        "role": {
+          "type": "string",
+          "enum": ["water", "air", "other"]
+        },
+        "name": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "material_model": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "eos_model": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "fluid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "method", "domain_min", "domain_max", "mesh", "still_water_level", "gravity", "materials", "pressure_reference", "initialization", "boundaries"],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "method": {
+          "type": ["string", "null"],
+          "enum": ["ale", "eulerian", "cfd_coupled", "none", null]
+        },
+        "domain_min": {
+          "$ref": "#/$defs/vector3"
+        },
+        "domain_max": {
+          "$ref": "#/$defs/vector3"
+        },
+        "mesh": {
+          "$ref": "#/$defs/mesh"
+        },
+        "still_water_level": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "gravity": {
+          "$ref": "#/$defs/vector3"
+        },
+        "materials": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fluidMaterial"
+          }
+        },
+        "pressure_reference": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "ambient_value"],
+          "properties": {
+            "mode": {
+              "type": ["string", "null"],
+              "enum": ["absolute", "gauge", null]
+            },
+            "ambient_value": {
+              "$ref": "#/$defs/nullableNumber"
+            }
+          }
+        },
+        "initialization": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "boundaries": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "fsi": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "keyword", "material_selection", "side_rule", "interface_ids"],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "keyword": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "material_selection": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "side_rule": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "interface_ids": {
+          "type": "array",
+          "items": {
+            "type": ["string", "integer"]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "keyword", "parameters", "output_id"],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "keyword": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "output_id": {
+          "type": ["string", "integer", "null"]
+        }
+      }
+    },
+    "coupling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["water_air_interface", "hull_fsi", "ice_fsi", "ship_ice_contact", "ice_ice_contact"],
+      "properties": {
+        "water_air_interface": {
+          "type": ["string", "null"],
+          "enum": ["volume_fraction_advection", "explicit_contact", "not_applicable", null]
+        },
+        "hull_fsi": {
+          "$ref": "#/$defs/fsi"
+        },
+        "ice_fsi": {
+          "$ref": "#/$defs/fsi"
+        },
+        "ship_ice_contact": {
+          "$ref": "#/$defs/contact"
+        },
+        "ice_ice_contact": {
+          "$ref": "#/$defs/contact"
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_speed", "speed_curve", "expected_first_contact_time", "termination_time"],
+      "properties": {
+        "target_speed": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "speed_curve": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "full_speed_time", "data_uri"],
+          "properties": {
+            "mode": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "full_speed_time": {
+              "$ref": "#/$defs/nullableNumber"
+            },
+            "data_uri": {
+              "$ref": "#/$defs/nullableString"
+            }
+          }
+        },
+        "expected_first_contact_time": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "termination_time": {
+          "$ref": "#/$defs/nullableNumber"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_files", "binary_interval", "ascii_interval", "contact_load", "field_outputs"],
+      "properties": {
+        "required_files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "binary_interval": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "ascii_interval": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "contact_load": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source", "preserve_raw", "smooth", "interpolate", "fit"],
+          "properties": {
+            "source": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "preserve_raw": {
+              "type": "boolean"
+            },
+            "smooth": {
+              "type": "boolean"
+            },
+            "interpolate": {
+              "type": "boolean"
+            },
+            "fit": {
+              "type": "boolean"
+            }
+          }
+        },
+        "field_outputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "status", "thresholds", "sample_times", "regions", "required_evidence"],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "pass", "fail", "not_applicable"]
+        },
+        "thresholds": {
+          "type": "object",
+          "additionalProperties": {
+            "type": ["number", "integer", "boolean", "string"]
+          }
+        },
+        "sample_times": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stages"],
+      "properties": {
+        "stages": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["g0", "g1", "a1", "a2", "b1", "b2", "c"],
+          "properties": {
+            "g0": {"$ref": "#/$defs/stage"},
+            "g1": {"$ref": "#/$defs/stage"},
+            "a1": {"$ref": "#/$defs/stage"},
+            "a2": {"$ref": "#/$defs/stage"},
+            "b1": {"$ref": "#/$defs/stage"},
+            "b2": {"$ref": "#/$defs/stage"},
+            "c": {"$ref": "#/$defs/stage"}
+          }
+        }
+      }
+    },
+    "sourceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "citation", "uri", "retrieved_at", "supported_fields", "limitations"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["manual", "paper", "experiment", "dataset", "project", "assumption"]
+        },
+        "citation": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string"
+        },
+        "retrieved_at": {
+          "type": ["string", "null"]
+        },
+        "supported_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter", "sources"],
+      "properties": {
+        "adapter": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "version", "input_hash", "output_hash"],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "version": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "input_hash": {
+              "$ref": "#/$defs/nullableString"
+            },
+            "output_hash": {
+              "$ref": "#/$defs/nullableString"
+            }
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sourceRecord"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Writing for Agents"
+  short_description: "审阅和编写代理指令，厘清职责归属并精简上下文，保留行为边界"
+  default_prompt: "使用 $writing-for-agents 审阅或编写代理指令，先判断职责归属，再处理冲突、冗余与措辞。"
+policy:
+  allow_implicit_invocation: true

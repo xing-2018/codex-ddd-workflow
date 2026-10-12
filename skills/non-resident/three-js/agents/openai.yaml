@@ -1,0 +1,6 @@
+interface:
+  display_name: "Three.js"
+  short_description: "Vanilla Three.js development and rendering reference"
+  default_prompt: "Use $three-js to implement or review Three.js code against the project's locked version."
+policy:
+  allow_implicit_invocation: true

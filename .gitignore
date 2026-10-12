@@ -1,0 +1,5 @@
+.local-artifacts/
+.venv/
+__pycache__/
+*.py[cod]
+*.log

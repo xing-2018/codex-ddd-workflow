@@ -1,0 +1,6 @@
+interface:
+  display_name: "TDD"
+  short_description: "通过稳定公共接缝执行行为级红绿循环并保留最小回归测试"
+  default_prompt: "使用 $tdd 沿用批准设计或现有测试惯例中的公共接口执行 red-green 循环；测试外部行为，无需逐个确认既有测试入口。"
+policy:
+  allow_implicit_invocation: true

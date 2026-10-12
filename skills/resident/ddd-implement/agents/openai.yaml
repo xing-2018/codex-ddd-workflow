@@ -1,0 +1,6 @@
+interface:
+  display_name: "DDD Implement"
+  short_description: "实施已批准切片、只读诊断或在既有契约内修复"
+  default_prompt: "使用 $ddd-implement 先判定diagnose、repair或implement授权模式；只读诊断不改文件，修复和实施只在当前已批准范围内进行。"
+policy:
+  allow_implicit_invocation: false

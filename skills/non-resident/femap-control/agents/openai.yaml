@@ -1,0 +1,6 @@
+interface:
+  display_name: "Femap 控制"
+  short_description: "打开并验证 Siemens Femap 模型"
+  default_prompt: "使用 $femap-control 打开 BDF 模型，验证 Femap COM 控制，并调整可见窗口尺寸。"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,206 @@
+\documentclass[UTF8,a4paper,zihao=-4]{ctexart}
+
+\usepackage{iftex}
+\ifXeTeX
+  \usepackage{fontspec}
+  \usepackage{xeCJK}
+\else
+  \errmessage{This template requires XeLaTeX. Use pandoc --pdf-engine=xelatex.}
+\fi
+
+\usepackage[a4paper,top=25.4mm,bottom=25.4mm,left=31.75mm,right=31.75mm,headheight=15pt,headsep=8mm,footskip=12mm]{geometry}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{tocloft}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{etoolbox}
+\usepackage{calc}
+
+\newcounter{none}
+
+\setmainfont{$if(mainfont)$$mainfont$$else$Times New Roman$endif$}
+\setCJKmainfont{$if(cjk-mainfont)$$cjk-mainfont$$else$SimSun$endif$}[AutoFakeBold=2.0,AutoFakeSlant=0.2]
+\setCJKsansfont{$if(cjk-sansfont)$$cjk-sansfont$$else$SimHei$endif$}[AutoFakeBold=2.0]
+\setCJKmonofont{$if(cjk-monofont)$$cjk-monofont$$else$Microsoft YaHei$endif$}
+
+\linespread{1.35}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{$if(toc-depth)$$toc-depth$$else$3$endif$}
+
+\ctexset{
+  section={format={\zihao{3}\sffamily\bfseries}, name={}, number={\arabic{section}}, aftername={\quad}, beforeskip=15.5pt, afterskip=14pt},
+  subsection={format={\zihao{4}\sffamily\bfseries}, name={}, number={\thesection.\arabic{subsection}}, aftername={\quad}, beforeskip=10pt, afterskip=7pt},
+  subsubsection={format={\zihao{-4}\sffamily\bfseries}, name={}, number={\thesubsection.\arabic{subsubsection}}, aftername={\quad}, beforeskip=7pt, afterskip=4pt}
+}
+
+\renewcommand{\contentsname}{目录}
+\renewcommand{\cftsecfont}{\zihao{5}}
+\renewcommand{\cftsecpagefont}{\zihao{5}}
+\renewcommand{\cftsubsecfont}{\zihao{5}}
+\renewcommand{\cftsubsecpagefont}{\zihao{5}}
+\renewcommand{\cftsubsubsecfont}{\zihao{5}}
+\renewcommand{\cftsubsubsecpagefont}{\zihao{5}}
+\setlength{\cftbeforetoctitleskip}{0pt}
+\setlength{\cftaftertoctitleskip}{12pt}
+\setlength{\cftbeforesecskip}{2pt}
+\setlength{\cftbeforesubsecskip}{0pt}
+\setlength{\cftbeforesubsubsecskip}{0pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+$if(show_header)$
+\fancyhead[C]{\small $if(header_text)$$header_text$$else$$if(shorttitle)$$shorttitle$$else$$if(title)$$title$$endif$$endif$$endif$}
+\renewcommand{\headrulewidth}{0.4pt}
+$else$
+\renewcommand{\headrulewidth}{0pt}
+$endif$
+\fancyfoot[C]{\small 第 \thepage 页}
+\renewcommand{\footrulewidth}{0pt}
+
+\captionsetup{font=small,labelfont=bf,labelsep=quad}
+\captionsetup[figure]{name=图,position=bottom}
+\captionsetup[table]{name=表,position=top}
+\floatplacement{figure}{H}
+\renewcommand{\figurename}{图}
+\renewcommand{\tablename}{表}
+$if(caption_number_by_section)$
+\numberwithin{figure}{section}
+\numberwithin{table}{section}
+$endif$
+\numberwithin{equation}{section}
+
+\lstdefinestyle{reportcode}{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  frame=single,
+  rulecolor=\color{black!30},
+  backgroundcolor=\color{black!3},
+  numbers=left,
+  numberstyle=\tiny\color{black!55},
+  xleftmargin=2em,
+  framexleftmargin=1.5em,
+  showstringspaces=false,
+  tabsize=4
+}
+\lstset{style=reportcode}
+
+\hypersetup{hidelinks,unicode=true,pdftitle={$if(title)$$title$$endif$},pdfauthor={$for(author)$$author$$sep$; $endfor$}}
+\urlstyle{same}
+\providecommand{\passthrough}[1]{#1}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\pandocbounded}[1]{%
+  \begin{adjustbox}{max width=\linewidth,max totalheight=.75\textheight,keepaspectratio}%
+  #1%
+  \end{adjustbox}%
+}
+\AtBeginEnvironment{longtable}{\small\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{0.95}}
+\setlength{\LTpre}{4pt}
+\setlength{\LTpost}{4pt}
+\pretocmd{\section}{\clearpage}{}{}
+
+$for(header-includes)$
+$header-includes$
+$endfor$
+
+\begin{document}
+
+$if(title)$
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+\vspace*{48mm}
+{\zihao{2}\sffamily\bfseries $title$\par}
+\vspace{10mm}
+{\zihao{-4} 版本：$if(version)$$version$$else$V1.0$endif$\par}
+\vspace{32mm}
+$if(prepared_by)$
+\begin{tabular}{>{\sffamily\bfseries}p{22mm} p{70mm}}
+编制 & $for(prepared_by)$$prepared_by$$sep$、$endfor$ \\\addlinespace[5pt]
+$if(checked_by)$校对 & $for(checked_by)$$checked_by$$sep$、$endfor$ \\\addlinespace[5pt]$endif$
+$if(reviewed_by)$审核 & $for(reviewed_by)$$reviewed_by$$sep$、$endfor$ \\\addlinespace[5pt]$endif$
+\end{tabular}
+$else$
+$if(checked_by)$
+\begin{tabular}{>{\sffamily\bfseries}p{22mm} p{70mm}}
+校对 & $for(checked_by)$$checked_by$$sep$、$endfor$ \\\addlinespace[5pt]
+$if(reviewed_by)$审核 & $for(reviewed_by)$$reviewed_by$$sep$、$endfor$ \\\addlinespace[5pt]$endif$
+\end{tabular}
+$else$
+$if(reviewed_by)$
+\begin{tabular}{>{\sffamily\bfseries}p{22mm} p{70mm}}
+审核 & $for(reviewed_by)$$reviewed_by$$sep$、$endfor$ \\\addlinespace[5pt]
+\end{tabular}
+$endif$
+$endif$
+$endif$
+\vfill
+$if(organization)$
+{\zihao{-4} $organization$\par}
+\vspace{4mm}
+$endif$
+$if(date)$
+{\zihao{-4} $date$\par}
+$endif$
+\end{titlepage}
+\clearpage
+$endif$
+
+$if(abstract)$
+\pagenumbering{Roman}
+\pagestyle{plain}
+\thispagestyle{plain}
+\begin{center}
+{\zihao{3}\sffamily\bfseries 摘要}
+\end{center}
+\vspace{6pt}
+$abstract$
+$if(keywords)$
+\vspace{8pt}
+\par\noindent {\sffamily\bfseries 关键字：}\par
+\noindent $for(keywords)$$keywords$$sep$；$endfor$\par
+$endif$
+\clearpage
+$endif$
+
+$if(toc)$
+$if(abstract)$
+\pagestyle{plain}
+$else$
+\pagenumbering{Roman}
+\pagestyle{plain}
+$endif$
+\begin{center}
+{\zihao{3}\sffamily\bfseries 目录}
+\end{center}
+\vspace{6pt}
+{\zihao{5}\linespread{1.15}\selectfont\makeatletter\@starttoc{toc}\makeatother}
+\clearpage
+\pagenumbering{arabic}
+\pagestyle{fancy}
+$endif$
+
+$body$
+
+\end{document}

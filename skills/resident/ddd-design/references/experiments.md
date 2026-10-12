@@ -1,0 +1,7 @@
+# Bounded experiments and proof of concept
+
+Read when a logic, data shape, state transition, integration or target-native interaction question cannot be settled reliably from documents and code. State the one question, existing approved contract, inputs, environment, expected observation and stopping condition. A technical experiment may also be a proof of concept; neither proves generality, reliability or production readiness from one successful hard-coded case. UI simulation does not validate a domain algorithm.
+
+Create disposable files only when the user explicitly requests the prototype or authorized work includes local evidence; read-only analysis does not grant file writes. Prefer a command, REPL or minimal script. Use [logic experiment guidance](experiment-logic.md) when the state model needs a runnable demonstration. For a target-native behavior question, keep the approved visual direction fixed and expose only the relevant transition, focus, selection, resize or failure. Visual direction and the reviewed HTML workflow belong to [UI design](ui-design.md), not to this experiment.
+
+Keep experiment state in memory unless persistence is the question. Use direct assertions rather than a separate permanent suite for disposable code. Return actual observations, limits and decision impact to the design; retain the artifact only when useful and authorized. An unexpected result can prompt a design delta but cannot approve it. Product implementation still follows G3 or the existing implementation boundary.

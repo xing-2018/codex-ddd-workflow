@@ -1,0 +1,6 @@
+interface:
+  display_name: "DDD Flow"
+  short_description: "路由项目设计、实施、诊断、修复、恢复与实质性只读探索"
+  default_prompt: "使用 $ddd-flow 识别请求、有效批准与项目采用状态；设计、实施、只读诊断、获准修复或实质性只读探索遵守相应权限与执行职责，技术通过不替代用户验收。"
+policy:
+  allow_implicit_invocation: true

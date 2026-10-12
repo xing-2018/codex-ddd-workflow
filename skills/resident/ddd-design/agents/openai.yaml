@@ -1,0 +1,6 @@
+interface:
+  display_name: DDD Design
+  short_description: 统一需求、UI原型与技术设计，以同一场景形成实施方案
+  default_prompt: 使用 $ddd-design 将目标整理为可测试需求、UI原型与可实现设计；仅需求请求保持需求范围。
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "ChatGPT 本机 MCP 插件创建器"
+  short_description: "创建、测试并通过 Tunnel 接入私有 ChatGPT MCP 插件"
+  default_prompt: "Use $create-chatgpt-local-mcp-plugin to build and test a private local ChatGPT MCP plugin for this project."
+
+policy:
+  allow_implicit_invocation: false

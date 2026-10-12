@@ -1,0 +1,6 @@
+interface:
+  display_name: "FastAPI 0.136.3"
+  short_description: "FastAPI 0.136.3 API and Pydantic best practices"
+  default_prompt: "Use $fastapi to implement or refactor a FastAPI 0.136.3 API with compatible patterns."
+policy:
+  allow_implicit_invocation: true

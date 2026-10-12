@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "project_id": "<approved-project-id>",
+  "source_repository": "<verified-source-identity>",
+  "source_commit": "<40-character-commit-sha>",
+  "skills": [
+    {
+      "name": "<managed-skill-name>",
+      "source_path": "skills/non-resident/<managed-skill-name>",
+      "source_commit": "<40-character-commit-sha>",
+      "target_path": ".agents/skills/<managed-skill-name>",
+      "skill_version": "<VERSION.txt value>",
+      "tree_sha256": "<64-character-complete-tree-sha256>",
+      "compatibility": {
+        "constraint": "<verified exact applicability>",
+        "status": "verified",
+        "evidence": ["<source and project version evidence>"]
+      },
+      "approval_ref": "<real user decision reference>"
+    }
+  ]
+}

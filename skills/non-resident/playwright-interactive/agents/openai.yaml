@@ -1,0 +1,8 @@
+interface:
+  display_name: "Playwright Interactive"
+  short_description: "通过持久浏览器会话迭代调试并验收Web与Electron界面"
+  icon_small: "./assets/playwright-small.svg"
+  icon_large: "./assets/playwright.png"
+  default_prompt: "Use $playwright-interactive to debug a local web or Electron app in a persistent Playwright session and capture the QA evidence."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,165 @@
+# Standard case template. null requires project or adapter input; it is not a recommended value.
+schema_version: "1.0"
+
+case:
+  id: null
+  title: null
+  mode: null                    # diagnostic | verification | formal
+  status: draft
+  unit_system: null
+  work_dir: null
+  results_dir: null
+  report_path: null
+
+software:
+  solver:
+    executable: null
+    version: null
+    precision: null             # single | double
+    parallel_mode: null         # smp | mpp | hybrid
+    ncpu: null
+    memory: null
+    manual_paths: []
+  preprocessor: null
+  postprocessor: null
+
+geometry:
+  hull:
+    source:
+      type: null                # parametric | cad | stl | mesh | other
+      uri: null
+      version: null
+      coordinate_system: null
+      scale: null
+    physical_model: null        # rigid_shell | deformable_shell | full_structure
+    open_deck: null
+    mesh:
+      strategy: null
+      target_size: null
+      quality_thresholds: {}
+
+ice:
+  enabled: true
+  generator:
+    name: null
+    version: null
+    config_uri: null
+    seed: null
+  field:
+    domain_min: null
+    domain_max: null
+    floe_count: null
+    target_concentration: null
+    size_distribution: {}
+    thickness_distribution: {}
+  deformable: null
+  mesh:
+    strategy: null
+    target_size: null
+    quality_thresholds: {}
+  material:
+    model: null
+    parameters: {}
+    failure: {}
+
+fluid:
+  enabled: true
+  method: null                 # ale | eulerian | cfd_coupled | none
+  domain_min: null
+  domain_max: null
+  mesh:
+    strategy: null
+    target_size: null
+    quality_thresholds: {}
+  still_water_level: null
+  gravity: null
+  materials:
+    - id: null
+      role: water
+      name: null
+      material_model: null
+      eos_model: null
+      parameters: {}
+    - id: null
+      role: air
+      name: null
+      material_model: null
+      eos_model: null
+      parameters: {}
+  pressure_reference:
+    mode: null                 # absolute | gauge
+    ambient_value: null
+  initialization: {}
+  boundaries: {}
+
+coupling:
+  water_air_interface: volume_fraction_advection
+  hull_fsi:
+    enabled: true
+    keyword: null
+    material_selection: null
+    side_rule: null
+    interface_ids: []
+  ice_fsi:
+    enabled: true
+    keyword: null
+    material_selection: null
+    side_rule: null
+    interface_ids: []
+  ship_ice_contact:
+    enabled: true
+    keyword: null
+    parameters: {}
+    output_id: null
+  ice_ice_contact:
+    enabled: true
+    keyword: null
+    parameters: {}
+    output_id: null
+
+run:
+  target_speed: null
+  speed_curve:
+    mode: null
+    full_speed_time: null
+    data_uri: null
+  expected_first_contact_time: null
+  termination_time: null
+
+outputs:
+  required_files: [messag, d3hsp, glstat, matsum, d3plot]
+  binary_interval: null
+  ascii_interval: null
+  contact_load:
+    source: null
+    preserve_raw: true
+    smooth: false
+    interpolate: false
+    fit: false
+  field_outputs: [water_volume_fraction, air_volume_fraction]
+
+acceptance:
+  stages:
+    g0: &stage_template
+      enabled: true
+      status: pending
+      thresholds: {}
+      sample_times: []
+      regions: []
+      required_evidence: []
+    g1: *stage_template
+    a1: *stage_template
+    a2: *stage_template
+    b1: *stage_template
+    b2: *stage_template
+    c: *stage_template
+
+provenance:
+  adapter:
+    name: null
+    version: null
+    input_hash: null
+    output_hash: null
+  sources: []
+
+extensions: {}

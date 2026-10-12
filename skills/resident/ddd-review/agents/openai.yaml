@@ -1,0 +1,6 @@
+interface:
+  display_name: "DDD Review"
+  short_description: "对冻结差异或路径快照分别审查设计一致性与工程质量"
+  default_prompt: "使用 $ddd-review 对当前冻结 diff 或指定路径快照分别执行设计一致性与工程质量审查；两个审查轴独立给出结论。"
+policy:
+  allow_implicit_invocation: true
