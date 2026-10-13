@@ -1,6 +1,8 @@
 # Design document authority
 
-Read this reference only when design persistence is authorized. It defines a default, not a migration mandate.
+Read before reviewing, planning or drafting design documents, including read-only work. Persistence still requires authorization. This reference defines a default, not a migration mandate.
+
+The synchronized [Chinese review copy](design-documents_zh.md) is for human review, not additional execution guidance.
 
 The unified `.planning` entry follows [project adaptation](../../ddd-flow/references/project-adaptation.md). Necessary workflow initialization or structural migration accompanies authorized project writes; it links existing long-lived requirements and designs, rather than relocating or duplicating their authority. This document's layout default does not turn workflow maintenance into a repository-wide documentation migration.
 
@@ -9,6 +11,22 @@ Approval of a design's content does not by itself authorize writing it. Apply [d
 ## Preserve repository authority
 
 Read the nearest instructions and existing design index before choosing a path. Preserve a compatible established structure and approval mechanism. Do not create a parallel hierarchy or migrate documents unless the user explicitly requests that reorganization.
+
+### Recover the writing contract
+
+Recover the document's purpose, reader, requested coverage, established structure, prohibited content and required retained facts from applicable project guidance and the relevant conversation or existing record. Carry earlier corrections into each affected document and subsequent addition; new feedback changes only the affected clauses. Reuse these decisions and valid guidance without rereading unchanged references or adding a separate checklist or tracker. If the original decision is unavailable or conflicting, recover it before dependent work.
+
+Follow an explicit complete-content or subset requirement. Do not silently substitute representative examples for requested complete content. If that boundary is unresolved and materially changes the result, clarify it before selecting content; state any proposed subset in the reviewable plan. This does not mandate including every supplied source in every document.
+
+### Developer-facing content
+
+Stable design documents describe what developers must build: goals, user actions and expected behavior, rules, parameters, interfaces, constraints and acceptance. Keep source extraction and collection narratives, authoring file paths and hashes, authoring timestamps, paragraph inventories, migration or approval history, work logs and check receipts in their existing task or evidence owner. Express a resulting requirement directly rather than narrating how the document was assembled. Retain a path or identifier when it defines a required product input, asset or interface; its mere presence is not a violation.
+
+Preserve normative sources and versions, applicability, business citations, engineering conditions and unknown or unverified facts that affect implementation or interpretation. Evidence must remain traceable; authoring provenance does not have to appear in stable design prose. Repository-specific layouts and content conventions take precedence.
+
+Use applicable project flows for demonstrations: distinguish dialogue input, contextual annotations and interface actions where the product makes that distinction; carry established inputs and choices through subsequent steps. Do not turn built-in defaults into extra user work or ask again for settled domain facts. Code is evidence of current implementation and gaps; approved design may precede implementation and must not be reduced merely because code is missing. Keep proposed behavior and unresolved choices distinct from approved targets.
+
+### Default layout
 
 When the repository has no design-document convention, use this default:
 
@@ -59,7 +77,7 @@ Keep tightly coupled components in one module document. Use one Markdown file pe
 - `模块/<模块名称>.md`: responsibilities and non-responsibilities, external contracts, dependencies, internal model, data and state, key flows, failure and recovery, operating constraints, observability, testing seams, source mapping and related ADRs.
 - `测试.md`: test goals, layers, environments and data, cross-module scenarios, non-functional validation and quality gates.
 
-Use these as selectable sections rather than mandatory empty headings. Keep durable observable requirements and invariants with their owning design fact. Keep request narrative, diagnosis history, implementation plans, task checklists and release procedure out of stable design documents. Do not create a duplicate status tracker.
+Use these as selectable sections rather than mandatory empty headings. Keep durable observable requirements and invariants with their owning design fact. Apply the developer-facing content boundary above; request narrative, diagnosis history, implementation plans, task checklists and release procedure belong in existing task or delivery owners. Do not create a duplicate status tracker.
 
 ## Active changes and approval
 

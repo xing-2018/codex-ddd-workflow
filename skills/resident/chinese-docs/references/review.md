@@ -1,41 +1,47 @@
-# 文档审查与无上下文读者测试
+# Content review and reading without chat context
 
-重要或正式文档在交付前进行一次整体内容审查；多格式交付共享这次内容审查，各格式只追加自己的版式/结构验收。
+Review substantial or formal documents once before delivery. Multiple formats share this content review; each format adds only its own layout or structural checks. The synchronized [Chinese review copy](review_zh.md) is for human review, not additional execution guidance.
 
-## 整体审查
+## Whole-document review
 
-检查：
+Recover the complete applicable document contract from the relevant conversation and project owners: purpose, audience, coverage, structure, earlier corrections, prohibited content and facts that must remain. New feedback changes only affected clauses. Reuse established decisions and guidance; do not create another tracker or ask again for settled choices.
 
-- 标题、摘要/概述、正文和结论是否回答同一个问题；
-- 文档目的、受众、范围和非目标是否一致；
-- 章节顺序是否符合读者理解路径，而不是聊天生成顺序；
-- 关键结论是否有证据，推断/假设是否明确；
-- 术语、缩写、单位、符号、状态名和接口名是否前后一致；
-- 是否存在矛盾、重复段落、空泛套话、无证据扩写或与目的无关内容；
-- 同级章节是否机械重复“定义→分点→拔高”，段落是否依赖连续路标、对照句或预告式收束推进；
-- 图表、公式、代码和引用是否在正文中有明确作用；
-- Markdown 是否符合 `markdown.md` 的可移植规则。
+Compare actual paragraphs and scenarios with that contract before treating the content as ready. Check:
 
-技术报告应优先写清约束和局限，不用笼统风险措辞替代具体事实。
+- The title, overview, body and conclusion answer the same question; purpose, audience, scope and exclusions agree.
+- Required coverage is present. An explicitly complete result has not become an undisclosed sample; any approved subset remains within its stated boundary.
+- Earlier corrections still hold in newly added or rewritten content. Prohibited content has not returned under different wording.
+- Sections follow the reader's understanding and action, rather than the order in which the chat generated them.
+- Key claims have evidence; inference, assumptions and unknowns are distinct. Terms, abbreviations, units, symbols, state names and interfaces are consistent.
+- There are no contradictions, redundant paragraphs, empty formulas of speech, unsupported additions or content irrelevant to the document's purpose.
+- Concrete operation steps match applicable product behavior and approved design. Inputs, choices and references carry through later steps; a connected conversation has dependent follow-ups rather than unrelated single questions. Missing implementation does not remove approved design targets, and expected replies do not prove implemented capability.
+- Peer sections do not mechanically repeat the same definition/list/praise pattern or rely on stock transitions and preview conclusions.
+- Figures, formulas, code and citations have a clear function in the body. Markdown follows [portability rules](markdown.md).
 
-当用户要求“去AI味”，或整体审查发现系统性机械文风时，读取`natural-chinese.md`并按文档层、段落层、句子层和表面层复查。自然度修改必须服从事实、术语、步骤和文档类型；没有系统性问题时不做风格重写。
+For software design documents, use the already applicable [developer-facing content boundary](../../ddd-design/references/design-documents.md#developer-facing-content); retrieve it only if missing or invalid. Keep authoring and maintenance narratives in their existing task/evidence owner while preserving sources, applicability and unresolved facts needed for implementation. Judge each passage's role, not a blacklist of words such as “source” or “file”.
 
-## 无上下文读者测试
+Correct content deviations within existing write authorization before delivery; review-only work reports them. Return unresolved semantic choices to their owner. Then finish applicable static and format checks. Links, formatting, counts and hashes establish those properties only; they cannot replace this comparison or certify content conformity.
 
-对重要文档，从“读者只有当前文件、看不到聊天记录和隐藏上下文”的角度检查。可使用独立 reviewer/subagent，但不是必需；没有独立上下文时，只依据当前文档文本进行一次刻意隔离的阅读测试。
+Technical reports state concrete constraints and limitations rather than generic risk language.
 
-至少回答这些问题：
+When the user requests naturalization or review finds systemic mechanical prose, read [natural Chinese](natural-chinese.md) and review the document, paragraph, sentence and surface levels. Preserve facts, terminology, steps and genre. Do not rewrite style without a systemic issue.
 
-1. 这份文档支持什么决定、理解或行动？
-2. 核心结论/方案是什么？
-3. 依赖哪些前提、约束和假设？
-4. 关键结论的证据在哪里？
-5. 读者读完后下一步应该做什么（若文档类型需要）？
-6. 哪些术语、跳步或上下文对项目外/新成员读者不清楚？
-7. 如果连续阅读三个同级章节，结构和段尾是否可机械预测，还是由各节承担的真实功能决定？
+## Reading without chat context
 
-将每个问题判定为 `direct`、`indirect` 或 `missing`。`missing` 且属于文档范围时必须补齐；`indirect` 若需要读者猜测关键链路，应改写为直接表达。
+For important documents, read deliberately as someone who has only the file and cannot see the chat or hidden context. An independent reviewer may help but is not required.
 
-## 停止条件
+Answer at least these questions:
 
-当文档已经准确覆盖目的和范围、关键结论可追溯、没有重要矛盾/重复或系统性机械表达、术语一致，且无上下文读者能够理解主要结论时停止。不要为了“更完整”继续添加无用章节或背景知识，也不要为了“更像人”继续增加装饰性表达。
+1. What decision, understanding or action does this document support?
+2. What is its central conclusion or proposal?
+3. What premises, constraints and assumptions does it depend on?
+4. Where is the evidence for its key claims?
+5. What should the reader do next, if the document type calls for an action?
+6. Which terms or missing steps would confuse a new or external reader?
+7. Do three consecutive peer sections follow a mechanical pattern, or does each structure serve its own function?
+
+Classify each answer as `direct`, `indirect` or `missing`. Fill an in-scope `missing` answer; make an `indirect` answer explicit when it forces the reader to infer a critical connection.
+
+## Stop condition
+
+Stop when the document fulfills the complete purpose and coverage, key claims remain traceable, earlier corrections hold, there are no material contradictions, redundancies or systemic mechanical phrasing, terminology agrees and a reader without chat context can understand the main conclusion. Do not add useless sections for completeness or decorative phrasing for naturalness.

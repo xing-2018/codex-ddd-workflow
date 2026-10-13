@@ -32,12 +32,12 @@ Selecting one format does not load, generate or verify others. Use evidence → 
 
 - Small bounded revisions: read the target and evidence, edit surgically and perform a compact review.
 - Routine documents: establish context/evidence, draft or revise, review and deliver.
-- Substantial/formal documents: establish a compact contract (purpose, audience, scope, sources, structure, formats, acceptance), draft, review and perform the reader test. Settled user/project choices need no repeated approval.
+- Substantial/formal documents: recover a compact contract (purpose, audience, scope, sources, structure, formats, acceptance), including earlier applicable corrections, prohibited content and facts that must remain. New feedback changes only affected clauses; do not silently narrow coverage or discard other settled choices. Use existing conversation/project owners, not a new tracker. Draft, review and perform the reader test. Settled user/project choices need no repeated approval.
 - Format-only: preserve content and perform applicable structural/visual QA.
 
 Use the closest existing template when useful; do not manufacture sections or unsupported facts. Preserve strong content and user-supplied terminology, framing and supported detail. Separate facts, inference, assumptions and unknowns; verify changing external claims through primary sources within authorization. Never invent data, citations, author/reviewer metadata or completion status. Mark only genuinely unresolved facts `[待补充]`.
 
-Write the main body before the abstract for substantial reports. Use the writing references for terminology, prose and naturalization; do not imitate an author or introduce colloquial style unless appropriately requested. Review the canonical content once for purpose, scope, structure, evidence, contradictions, redundancy, terminology, mechanical prose and Markdown portability. Repeat content review after format conversion only if it reveals a content defect.
+Write the main body before the abstract for substantial reports. Use the writing references for terminology, prose and naturalization; do not imitate an author or introduce colloquial style unless appropriately requested. Before delivery, use [content review](references/review.md) to compare actual paragraphs and scenarios with the complete contract, then complete applicable static/format checks; their success does not establish semantic conformity. Repeat content review after format conversion only if it reveals a content defect.
 
 ## Deliver and complete
 
