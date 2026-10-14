@@ -14,7 +14,7 @@
 - **变更范围（Change Envelope）**：用户要求的行为、接口、领域算法、数据语义、并发保证、约束、验收和排除项。除非明确锁定，文件清单和执行顺序只是预测。
 - **持久化写入边界（Persistent Write Boundary）**：首次写入前，确定详细计划、真实的执行授权及覆盖的目标与动作。没有明确修改授权或有界自主执行授权时，只读调查并提出方案；意图、范围或批准不明时交回用户。权威文档、记录、预览和临时产物也属于写入边界。可选辅助文档须有任务用途和写入授权。不得编造批准或认证记录。
 
-先确定指定项目和工作区。DDD项目任务统一使用`.planning/PROJECT.md`、`STATE.md`和活动`changes/<change>/record.md`；普通解释和快捷查询不建立变更包。结构缺失、过期、项目绑定变化或迁移问题未决时，读取[项目适配](references/project-adaptation.md)。首次获准项目写入包括批准范围内必要的初始化与无损结构迁移，用户或项目约束禁止时除外；无需另设采用决定。只读任务检查同一规范并报告差异，不创建文件。进入或恢复任务时，对照当前已验证安装规范的相关记录，复用未变证据；活动记录缺失、过期或跨上下文时使用[恢复方法](references/recovery.md)。既有需求、设计与批准仍由原持有方负责，记录可链接它们而不复制内容。只有具体生命周期问题才读取[项目Skill](references/project-skills.md)；工作流初始化不安装Skill或修改配置。
+先确定项目和工作区。DDD任务使用`.planning/PROJECT.md`、`STATE.md`对话索引及选定`changes/<change>/record.md`；普通解释和快捷查询不建包。选择用户指定变更或本对话唯一已观察绑定，不选择最新指针；对照当前已验证规范的相关记录，复用未变证据。有效恢复适配器的指针只作为声明事实，不作为权威。缺失／过期事实用[恢复方法](references/recovery.md)，结构、绑定或迁移缺口用[项目适配](references/project-adaptation.md)。首次获准写入覆盖范围内必要初始化及无损迁移；只读任务只报告缺口。需求、设计与批准仍由原持有方负责，链接而不复制。只有具体生命周期问题才读取[项目Skill](references/project-skills.md)；初始化不安装Skill或改变配置。
 
 ## 设计审批
 
@@ -62,18 +62,39 @@
 | 条件 | 参考 |
 | --- | --- |
 | 首次项目写入或Git变更 | [Git英文执行规则](references/git.md)，[中文审阅版](references/git_zh.md)仅供人工审阅 |
+| 引用对话中有缺失背景或权威 | 请求历史前提取[execution.md的Conversation evidence](references/execution.md#conversation-evidence)，只恢复必要决定与证据 |
 | 产品变化、修复、构建或交付检查中尚未解决的版本与交付要求 | [版本与交付](references/versioning-and-delivery.md)；复用已查明的项目配置和判断；明确可丢弃且没有产品或交付物变化的夹具无需交付过程 |
 | 测试选择、创建、维护或审阅 | [测试与测试维护](../ddd-implement/references/testing.md)；不触发TDD |
 | 大型工具结果、长时间运行的操作或重复命令失败 | 使用[read_section.py](scripts/read_section.py)及`--heading "Efficient tool execution"`，仅提取[execution.md](references/execution.md)中的高效工具执行节 |
 | 有依据的委派、受管结果验收、受管依赖或阻塞变化、受管工作恢复 | 完成上述职责判断后，只读取[执行与恢复](references/execution.md)缺失章节：派发用**Record and dispatch**、**Worker contract**、**Accept a result**；验收用**Accept a result**；恢复用**Resume from durable evidence**及必要的**State transitions** |
 | 明确要求规划，或规模、多会话、实际阻塞关系需要任务图 | [规划](references/planning.md) |
 | 项目会话恢复、活动记录缺失或过期、昂贵事实恢复、明确要求便携交接 | [恢复](references/recovery.md)；只读取相关事实和现存活动变更 |
+| 写入记录phase／status，包括仅原型工作 | 使用[状态词汇及记录检查](references/recovery.md#state-vocabulary)，复用对应实际输入的可辨认检查 |
+| 可选hook方法、覆盖或启用问题未决 | [生命周期适配器](references/lifecycle-hooks.md)；不可用时保留人工路径，启用另行授权 |
 | 工作流结构缺失或过期、项目绑定变化或迁移未决 | [项目适配](references/project-adaptation.md)；只比较相关差异并复用未变绑定 |
 | 匹配、核查或变更项目级受管Skill | [项目Skill](references/project-skills.md)及固定来源工具；配置变化另行审批 |
 
-提取章节时，根据当前Skill清单或已验证位置解析`<ddd-flow>`，运行`python "<ddd-flow>/scripts/read_section.py" "<ddd-flow>/references/execution.md" --heading "Efficient tool execution"`；独立阶段或审阅入口可提取英文入口的**Choose execution ownership**章节，不遍历其他阶段。重复`--heading`可在一次调用中读取多个已知章节；输出前先验证全部标题，重复或重叠章节按来源顺序仅输出一次源行，并提供一次完整来源路径与SHA-256。按Worker contract将该指导身份复用于任务包，业务基线仍由worker核验。标题缺失或重复时不返回正文。发生该失败后，对同一来源使用此脚本的`--list-headings`，再按列出的准确标题提取；不继续猜标题或行偏移。组合命令保留该提取失败的状态，后续成功不能把它算作已加载。脚本或运行时不可用时报告缺失条件，或使用已有的有界读取工具保持相同章节边界；不回退到全文。复用仍有效的提取证据。
+从当前清单或已验证位置解析`<ddd-flow>`，使用`scripts/read_section.py <source> --heading <exact-title>`；重复`--heading`读取已知章节。独立阶段／审阅入口可只提取**Choose execution ownership**。工具先验证全部标题，再返回去重源行及路径／SHA-256；在Worker contract复用身份，业务验证仍由worker负责。标题失败直接返回准确可用标题，不返回正文；从该输出选择，不猜测。标题仍缺失时才用`--list-headings`。保留失败状态，不算已加载指导。工具不可用时报告缺口，或使用相同章节边界的有界读取，不读全文。
 
 本地执行与委派执行的受管结果共用执行协议。活动`.planning`记录链接既有设计、任务、报告和Git证据，不复制它们。小任务无需任务图或单独计划。昂贵事实和明确要求的便携交接使用[恢复方法](references/recovery.md#recover-facts-without-a-second-memory-store)；不另建状态或默认记忆存储。
+
+## 参考修订审阅
+
+以下同步审阅英文引用的相关规则，不作为额外执行链；完整原有引用仍由英文文件持有。
+
+### 指导复用与对话证据
+
+[高效工具执行](references/execution.md#efficient-tool-execution)：在上下文内的AGENTS、角色和方法视为已加载。发出读取前指出缺失的来源或章节；新轮次、阶段变化或恢复指针不使已有指导失效。只补读缺失、改变、冲突部分或明确要求的刷新。复用先前有效身份与准确标题，用既有脚本批量读取必要章节；结果截断时只补缺失片段。没有变化证据时，不反复哈希或扫描未变输入。
+
+[对话证据](references/execution.md#conversation-evidence)：先确定缺失的需求、批准、纠正、已接受结果或阻塞，在工具允许范围内读取相关轮次，初始不附带工具输出。保留来源对话、轮次身份、顺序和分页游标；只为恢复缺失事实及其权威补读较早轮次。
+
+结构化结果先在工具编排中筛选再返回模型，保留相关用户指令与主会话结论、条件及来源；省略思考条目、命令正文、补丁和无关输出。结果大小选项或includeOutputs:false仍可能包含大量命令项，须明确选字段并限制返回文本。必要内容过大时分割相关轮次或读取具体条目，不静默截断决定。检查所有并行结果、保留各项错误，报告证据缺口；仅为解决当前问题展开特定命令、差异或收据。其他对话只提供证据，不授予联系或接管权限；获准保存时链接既有记录，不复制对话或新建台账。
+
+### 任务包首次写入
+
+[项目适配](references/project-adaptation.md#unified-workflow-and-migration)：先按实际阶段准备必需的brief／design事实负责方指针、合法记录字段及已有批准依据，尽可能用一次受支持补丁写入完整包及绑定。分开写入时先建必要文件，最后发布STATE绑定并保留其他条目。既有负责文件仍持有权威，指针不创造新设计、审批会议或重复规范。
+
+初始化中的hook警告只表示结构反馈，不判产品失败或授权修复。只完成获准的缺失文件／指针，再检查完整包一次；先用问题路径和已说明的校验接口处理，仅在校验器行为确有疑点时读取其源码。被排除的写入仍排除，未完成的包不能声称结构有效。
 
 ## 3. 继续或停止
 

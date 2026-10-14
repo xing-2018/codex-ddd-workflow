@@ -50,16 +50,27 @@ def main():
             print(f'{index + 1}: {"#" * level} {title}')
         return
     ranges = []
+    failures = []
     for heading in args.heading:
         matches = [entry for entry in entries if entry[2] == heading]
         if not matches:
-            parser.error(f'ATX heading {heading!r} not found in {path}; use --list-headings to inspect titles')
+            failures.append(f'ATX heading {heading!r} not found')
+            continue
         if len(matches) > 1:
             numbers = ', '.join(str(index + 1) for index, _, _ in matches)
-            parser.error(f'Heading {heading!r} is ambiguous at lines {numbers} in {path}')
+            failures.append(f'Heading {heading!r} is ambiguous at lines {numbers}')
+            continue
         start, level, _ = matches[0]
         end = next((index for index, depth, _ in entries if index > start and depth <= level), len(lines))
         ranges.append((start, end))
+    if failures:
+        print(source, file=sys.stderr)
+        for failure in failures:
+            print(f'ERROR {failure}', file=sys.stderr)
+        print('Available exact headings (no section body was returned):', file=sys.stderr)
+        for index, level, title in entries:
+            print(f'{index + 1}: {"#" * level} {title}', file=sys.stderr)
+        return 2
     merged = []
     for start, end in sorted(ranges):
         if merged and start <= merged[-1][1]:
@@ -74,4 +85,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())

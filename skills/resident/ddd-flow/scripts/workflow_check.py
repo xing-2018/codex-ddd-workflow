@@ -51,9 +51,19 @@ def safe_path(root: Path, path: Path) -> bool:
     return True
 
 
-def check_index(root: Path, entry: str, change: Path, schema: int,
-                thread: str | None) -> list[dict[str, object]]:
-    """Check declared membership; this does not lock resources or certify approval."""
+def read_bytes(path: Path, limit: int | None = None) -> bytes:
+    """Keep CLI reads unchanged; lifecycle callers can bound each file read."""
+    if limit is None:
+        return path.read_bytes()
+    with path.open("rb") as stream:
+        content = stream.read(limit + 1)
+    if len(content) > limit:
+        raise OSError("workflow input exceeds the lifecycle read limit")
+    return content
+
+
+def index_rows(entry: str) -> tuple[list[tuple[str, str | None]], list[dict[str, object]]]:
+    """Parse index declarations without selecting a newest or implicit owner."""
     location = ".planning/STATE.md"
     problems: list[dict[str, object]] = []
     rows: list[tuple[str, str | None]] = []
@@ -69,6 +79,14 @@ def check_index(root: Path, entry: str, change: Path, schema: int,
                                   "owner_thread must follow exactly one active_record"))
         else:
             rows[-1] = (rows[-1][0], value)
+    return rows, problems
+
+
+def check_index(root: Path, entry: str, change: Path, schema: int,
+                thread: str | None) -> list[dict[str, object]]:
+    """Check declared membership; this does not lock resources or certify approval."""
+    location = ".planning/STATE.md"
+    rows, problems = index_rows(entry)
     if schema == 1:
         if len(rows) != 1:
             return [issue("ACTIVE_POINTER_REVIEW", location,
@@ -114,35 +132,24 @@ def check_index(root: Path, entry: str, change: Path, schema: int,
     return problems
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        epilog="Example: --project /path/to/project --change .planning/changes/example "
-               "--thread observed-id. --change selects the directory containing record.md.",
-    )
-    parser.add_argument("--project", required=True, type=Path, metavar="PROJECT_ROOT",
-                        help="Project root directory containing .planning")
-    parser.add_argument("--change", required=True, type=Path, metavar="CHANGE_DIRECTORY",
-                        help="Change directory, e.g. .planning/changes/example, relative to "
-                             "--project or an absolute directory inside it; do not pass record.md")
-    parser.add_argument("--thread", help="Observed conversation ID; checks schema 2 ownership without changing it")
-    args = parser.parse_args()
+def check_project(project: Path, change_dir: Path, thread: str | None = None,
+                  read_limit: int | None = None) -> dict:
+    """Return the same read-only result for CLI callers and lifecycle adapters."""
     problems: list[dict[str, object]] = []
     checked: list[str] = []
     schema: int | None = None
     try:
-        root = args.project.resolve(strict=True)
+        root = project.resolve(strict=True)
         if not root.is_dir():
             raise OSError("project is not a directory")
     except OSError as exc:
-        print(json.dumps({"schema_version": 1, "status": "UNAVAILABLE", "checked_paths": [],
-                          "issues": [issue("PROJECT_UNAVAILABLE", str(args.project), str(exc))]}, ensure_ascii=False))
-        return EXIT["UNAVAILABLE"]
-    change = (root / args.change).absolute() if not args.change.is_absolute() else args.change.absolute()
+        return {"schema_version": 1, "status": "UNAVAILABLE", "checked_paths": [],
+                "issues": [issue("PROJECT_UNAVAILABLE", str(project), str(exc))]}
+    change = (root / change_dir).absolute() if not change_dir.is_absolute() else change_dir.absolute()
     if not safe_path(root, change):
-        problems.append(issue("UNSAFE_CHANGE_PATH", str(args.change), "change must be inside project without links"))
+        problems.append(issue("UNSAFE_CHANGE_PATH", str(change_dir), "change must be inside project without links"))
     elif not change.is_dir():
-        problems.append(issue("CHANGE_MISSING", str(args.change),
+        problems.append(issue("CHANGE_MISSING", str(change_dir),
                               "change directory is missing; pass its directory, "
                               "e.g. .planning/changes/example, not record.md"))
     else:
@@ -154,7 +161,7 @@ def main() -> int:
                 continue
             checked.append(file.relative_to(root).as_posix())
             try:
-                entry = file.read_text(encoding="utf-8")
+                entry = read_bytes(file, read_limit).decode("utf-8")
             except (OSError, UnicodeError) as exc:
                 problems.append(issue("WORKFLOW_FILE_UNAVAILABLE", file.relative_to(root).as_posix(), str(exc)))
                 continue
@@ -171,7 +178,7 @@ def main() -> int:
                                           "declare a recoverable verified Skill source identity", False))
             else:
                 if schema is not None:
-                    problems.extend(check_index(root, entry, change, schema, args.thread))
+                    problems.extend(check_index(root, entry, change, schema, thread))
         for filename in ("record.md",):
             file = change / filename
             if not safe_path(root, file) or not file.is_file():
@@ -181,7 +188,7 @@ def main() -> int:
         record = change / "record.md"
         if record.is_file() and safe_path(root, record):
             try:
-                content = record.read_text(encoding="utf-8")
+                content = read_bytes(record, read_limit).decode("utf-8")
             except (OSError, UnicodeError) as exc:
                 problems.append(issue("RECORD_UNAVAILABLE", record.relative_to(root).as_posix(), str(exc)))
                 content = ""
@@ -214,7 +221,7 @@ def main() -> int:
                     problems.append(issue("BASELINE_PATH_INVALID", raw, "declared local baseline is missing or unsafe"))
                     continue
                 checked.append(declared.relative_to(root).as_posix())
-                if hashlib.sha256(declared.read_bytes()).hexdigest() != match.group("hash").lower():
+                if hashlib.sha256(read_bytes(declared, read_limit)).hexdigest() != match.group("hash").lower():
                     problems.append(issue("BASELINE_DRIFT", raw, "declared SHA-256 differs from current bytes", False))
             for match in LINK.finditer(content):
                 target = match.group("target").split("#", 1)[0].strip("<>")
@@ -237,8 +244,26 @@ def main() -> int:
                                       "review placeholder fields before treating package as complete", False))
     status = "INVALID" if any(p["blocks"] and p["code"] != "BASELINE_DRIFT" for p in problems) else (
         "NEEDS_REVIEW" if problems else "PASS")
-    print(json.dumps({"schema_version": 1, "status": status, "checked_paths": sorted(set(checked)),
-                      "issues": problems}, ensure_ascii=False, sort_keys=True))
+    return {"schema_version": 1, "status": status, "checked_paths": sorted(set(checked)),
+            "issues": problems}
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        epilog="Example: --project /path/to/project --change .planning/changes/example "
+               "--thread observed-id. --change selects the directory containing record.md.",
+    )
+    parser.add_argument("--project", required=True, type=Path, metavar="PROJECT_ROOT",
+                        help="Project root directory containing .planning")
+    parser.add_argument("--change", required=True, type=Path, metavar="CHANGE_DIRECTORY",
+                        help="Change directory, e.g. .planning/changes/example, relative to "
+                             "--project or an absolute directory inside it; do not pass record.md")
+    parser.add_argument("--thread", help="Observed conversation ID; checks schema 2 ownership without changing it")
+    args = parser.parse_args()
+    result = check_project(args.project, args.change, args.thread)
+    print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+    status = result["status"]
     return EXIT[status]
 
 
