@@ -4,7 +4,7 @@
 
 本Skill为当前变更维护一份相互一致的设计：用户需要什么、系统与界面怎样满足，以及下一项可实施切片。只读取当前问题所需的方法。UI原型、技术实验、图、代码和测试都是证据，本身不构成批准或产品合同变更。
 
-由`ddd-flow`选中时，沿用其Authority Baseline、Change Envelope和Persistent Write Boundary。直接调用先读[ddd-flow](../ddd-flow/SKILL.md)以建立相同边界和继续规则。适用其[设计批准](../ddd-flow/references/design-approval.md)：复用已确定的G1或G2决定，只为新出现的重要语义取得批准。本Skill不增加逐文件关口。仅需求模式只回答目标、原因、约束和验收，不选择架构或编写生产代码。
+由`ddd-flow`选中时，沿用其Authority Baseline、Change Envelope和Persistent Write Boundary。直接调用用ddd-flow的`scripts/read_section.py <ddd-flow>/SKILL.md --heading "Shared contract"`只取得缺失的[公共契约](../ddd-flow/SKILL.md#shared-contract)；复用已提供且有效的正文，不重新路由。适用其[设计批准](../ddd-flow/references/design-approval.md)：复用已确定的G1或G2决定，只为新出现的重要语义取得批准。本Skill不增加逐文件关口。仅需求模式只回答目标、原因、约束和验收，不选择架构或编写生产代码。
 
 先只读调查，在对话中提出详细改动或预览方案。UI设计请求、格式转换或反馈本身不授权写入设计、记录、原型或临时证据。写入前，按路由器的批准参考确认明确执行授权或有效的有界自主范围。含义或权限不清时，先交由用户决定，再进行依赖改动；可用工具和可逆性不能解决授权问题。
 
@@ -12,13 +12,15 @@
 
 1. 恢复适用需求、当前产品、设计、术语、ADR、配置和调用方。调查时区分已批准事实、已观察行为、提议与未知；先查可发现的事实。审阅或起草设计文档前，先读取[设计文档归属](references/design-documents.md)，恢复完整适用写作约定及前文纠正；后续反馈只改变涉及的条款。复用有效指导和既有负责文件，不新增台账。沿统一`.planning`活动记录工作；必要初始化与无损结构迁移由路由器在获准项目写入范围内处理，只读设计不创建记录。
 2. 使用[需求方法](references/requirements.md)确定用户任务、代表性正常与失败场景、范围、排除项和可观察验收。重要需求只在负责文件中写全，其他产物引用它。
-3. 设计适用的变换或算法、输入含义与单位、状态所有者、接口、顺序、失败、恢复和资源约束。各视图使用同一场景。等价私有实现细节交给实施；输出、默认值、持久化、时序或依赖的变化需要设计批准。
-4. 创建或修改UI时，包括已批准的已有界面，读取[UI设计](references/ui-design.md)，应用布局稳定与任务所需内容的默认规则；已确定设计不重开批准关口。构建、修改或验证原型前读取[预览合同](references/preview-contract.md)，包括单一项目目录、迁移、[按工具能力选择查看路径](references/preview-contract.md#scope-routing-and-viewing-tools)及[真实内置浏览器查看与批注覆盖](references/preview-contract.md#native-browser-review-and-annotations)。UI与技术设计共用一个场景和负责人；多页原型共享导航与内存状态。合同允许创作时安全复用展示资源，同时保持构建后的产物独立。矛盾交给事实负责人处理，原型不能自行发明计算或数据语义。
-5. 按需读取[领域](references/domain.md)、[架构](references/architecture.md)、[研究](references/research.md)或[实验](references/experiments.md)，分别解决术语与ADR、真实边界、一手外部事实和一个可运行的有界疑问。只有运行时、项目形态或进程边界未决时补读[技术栈适配](references/stack-adaptation.md)。这不是固定步骤。只有用户要求压力测试时，才使用需求方法中的访谈分支。
-6. 提供一份可审阅设计，先写用户阅读区：目标、操作、变化与保留项、理由、错误或取消、原型或样例路径、待批准决定；再写适用的责任、数据状态、接口、失败、验证和迁移。按适用项目行为与批准设计核对具体用户步骤；代码用作可行性依据，目标正文与实现记录的边界沿用设计文档归属。`brief.md`与`design.md`持有本轮新事实或指向既有负责文件；长期事实及其内容边界由设计文档归属维护。文档默认Markdown，只在路由器写入边界内保存。
+3. 设计适用的变换或算法、输入含义与单位、状态所有者、接口、顺序、失败、恢复和资源约束。各视图使用同一场景。按[架构判断](references/architecture.md#judge-structural-consequences)核对拟定结构是否符合实际任务；简单且已确定的路径只需简短说明。新边界或实质接口变化在确定签名与数据结构前，按[调用用法与合同检查](references/architecture.md#caller-usage-and-contract)核对。等价私有实现细节交给实施；输出、默认值、持久化、时序或依赖的变化需要设计批准。
+4. 创建或修改UI时，包括已批准的已有界面，读取[UI设计](references/ui-design.md)，应用布局稳定与任务所需内容的默认规则；已确定设计不重开批准关口。其文案规则要求恢复指引符合目标用户职责和可用动作；技术异常详情进入适当诊断渠道，不让普通产品用户检查服务器或部署来解决应用故障。明确设计的运维界面可提供符合操作者职责的检查，换一句提示不能代替底层故障修复。构建、修改或验证原型前读取[预览合同](references/preview-contract.md)，包括单一项目目录、迁移、[按工具能力选择查看路径](references/preview-contract.md#scope-routing-and-viewing-tools)及[真实内置浏览器查看与批注覆盖](references/preview-contract.md#native-browser-review-and-annotations)。UI与技术设计共用一个场景和负责人；多页原型共享导航与内存状态。合同允许创作时安全复用展示资源，同时保持构建后的产物独立。矛盾交给事实负责人处理，原型不能自行发明计算或数据语义。
+5. 按需读取[领域](references/domain.md)、[架构](references/architecture.md)、[研究](references/research.md)或[实验](references/experiments.md)，分别解决术语与ADR、真实边界、一手外部事实和一个可运行的有界疑问。[架构中文审阅副本](references/architecture_zh.md)仅供人工阅读。只有运行时、项目形态或进程边界未决时补读[技术栈适配](references/stack-adaptation.md)。这不是固定步骤。只有用户要求压力测试时，才使用需求方法中的访谈分支。
+6. 需要决策的活动变更提案，先呈现适用的用户决策信息：目标、操作、变化与保留项、理由和条件、错误或取消、原型或样例路径、待批准决定。可用连贯段落或有用的小节，删去不适用项目，但不丢重要承诺或待决事项；再写适用的实现责任、数据状态、接口、失败、验证和迁移。稳定系统或模块设计按设计文档归属沿用既定结构，不逐篇附上提案表单或审批历史。按适用项目行为与批准设计核对具体用户步骤；代码用作可行性依据，实现发现放回记录负责文件。`brief.md`与`design.md`持有本轮新事实或指向既有负责文件。文档默认Markdown，只在路由器写入边界内保存。
 7. 用户要求实施规划，或已批准设计需要规划时，读取[规划方法](references/planning.md)。说明当前纵向切片、结果和检查；单切片放在`record.md`，真实多切片依赖才另建计划。设计批准不等于实施授权，规划也不执行切片。
 
 ## 完成条件
+
+设计涉及跨模块或跨进程行为、难回退的数据或接口变化、重要权限或工程风险时，在请求G2前使用[ddd-review的`design-proposal`模式](../ddd-review/SKILL.md#select-the-review-mode)；用户明确要求方案审阅时也使用。冻结适用需求和草案，复用同一对象仍有效的审阅。已确定的小型局部变化继续使用下方内容审阅。沿ddd-flow执行职责判断默认在主会话审阅，不要求额外代理、对话或审批会议。发现只支持设计决策，不构成G2、实施授权或实现PASS。
 
 交付设计文档前，按[设计层级内容审阅](references/design-documents_zh.md#内容审查)核对实际段落与场景，并用[chinese-docs内容审阅](../chinese-docs/references/review.md)核对适用的写作约定。在既有授权内修正范围内偏差，报告尚未解决的语义选择。链接、格式、数量和哈希只证明各自检查，不证明内容符合要求。
 

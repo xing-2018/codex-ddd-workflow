@@ -1,5 +1,7 @@
 ## Screenshot Examples
 
+Capture, retention and emission are separate actions. Before a model-bound capture or `emitImage`, identify the unresolved visual question and relevant region; reuse valid inspected evidence instead of emitting another image for phase changes or confidence alone. Save required artifacts without emitting them when their visual claims already have evidence. Honor tool return protocols, including automatic image returns; consider them before invocation rather than bypassing them. Use no fixed image count or per-image approvals. The shared [visual evidence method](../../../resident/ddd-implement/references/testing.md#select-visual-evidence) owns scope, expansion and stopping.
+
 If you plan to emit a screenshot through `nodeRepl.emitImage(...)`, use the CSS-normalized paths in the next section by default. Those are the canonical examples for screenshots that will be interpreted by the model or used for coordinate-based follow-up actions. Keep raw captures as an exception for fidelity-sensitive debugging only; the raw exception examples appear after the normalization guidance.
 
 ### Model-bound screenshots (default)

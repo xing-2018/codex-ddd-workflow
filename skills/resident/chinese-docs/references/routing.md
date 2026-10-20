@@ -30,8 +30,8 @@
 默认仅交付Markdown；未要求保存文件时在对话中交付。仅当用户明确要求DOCX、PDF或多格式时，才进入对应分支。正式文体、文档类型、已有模板或生成器不构成格式请求。只读取、生成和验证当前所需格式，不自动制作另一种格式或提出格式确认问题。格式转换不授权增加正文范围或持久化目标。
 
 - 仅 Markdown：以 Markdown 为最终交付，读取 `markdown.md`。
-- 通用DOCX：内容变化时先稳定Markdown，再按可用文档生成能力的通用Word合同生成，执行适用的结构验证并全页检查；保留读者任务所需的准确命令、配置、仓库相对路径及安装路径。不得仅因输出为Word而读取或应用`word.md`。
-- bundled正式研究报告DOCX：用户／项目明确采用，或类型已确定为正式研究报告且无更强模板合同时，读取[`word.md`](word.md)。DOTX唯一提供基础版式，word.md说明继承与个人覆盖；生成和审计直接读模板。既有内容与覆盖冲突时先报告，不因模板采用获得删减权限。完成结构审计、目录刷新和全页视觉检查；纯格式处理另核对内容，结构通过不等于整体验收。
+- General DOCX: stabilize Markdown for content changes, then use the applicable general Word contract, structural validation and [visual inspection](review.md#visual-inspection). Preserve reader-needed commands, configuration and paths. The extension alone does not select `word.md`; pass the approved sampled or full-page scope to the specialist method.
+- Bundled formal research DOCX: use [`word.md`](word.md) when explicitly adopted or selected for that established type without a stronger template contract. DOTX owns base formatting; generate and audit against it and apply only defined overrides. Report content conflicts without deleting material. Complete structural audit, TOC refresh and the same approved visual scope; format-only work also compares content. Structure alone is not overall acceptance.
 - 用户模板DOCX：先检查用户模板的样式、结构和内容合同，再按该合同生成并完成适用的结构与视觉检查；用户未明确要求时，不得套用bundled研究报告的样式ID或内容边界。
 - 通用PDF：指南、README和操作说明等沿用文档结构，按阅读需要排版，读取[PDF交付](pdf.md)的共同要求；不自动采用报告封面、目录、章节编号或章间分页。
 - 正式中文科技/技术报告PDF：没有更强模板合同时，读取[PDF交付](pdf.md)中的正式报告专属流程，使用现有报告模板和生成器。

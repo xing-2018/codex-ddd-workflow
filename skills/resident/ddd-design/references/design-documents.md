@@ -20,6 +20,8 @@ Before drafting or changing a prototype, identify the affected domain object, it
 
 Follow an explicit complete-content or subset requirement. Do not silently substitute representative examples for requested complete content. If that boundary is unresolved and materially changes the result, clarify it before selecting content; state any proposed subset in the reviewable plan. This does not mandate including every supplied source in every document.
 
+For Chinese drafting or revision, read [detail and information selection](../../chinese-docs/references/chinese-writing.md#详略与信息取舍) before writing, unless already validly loaded. Use that shared method directly; do not start the full document workflow or load it for unrelated worker tasks. Delivery still uses the single content review below.
+
 ### Developer-facing content
 
 Stable design documents describe what developers must build: goals, user actions and expected behavior, rules, parameters, interfaces, constraints and acceptance. State the intended behavior and selected technical route directly, without labeling each passage as implemented or planned. Current-capability inventories, implementation-gap tables and rollout progress belong in existing task or review records unless the user explicitly requests an implementation assessment. Keep source extraction and collection narratives, authoring file paths and hashes, authoring timestamps, paragraph inventories, migration or approval history, work logs and check receipts in their existing task or evidence owner. Express a resulting requirement directly rather than narrating how the document was assembled. Retain a path or identifier when it defines a required product input, asset or interface; its mere presence is not a violation.

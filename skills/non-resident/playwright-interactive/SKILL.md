@@ -5,7 +5,7 @@ description: "Debug and visually validate local web or Electron applications thr
 
 # Playwright Interactive Skill
 
-Use a persistent `node_repl` Playwright session to debug local web or Electron apps, keep the same handles alive across iterations, and run functional plus visual QA without restarting the whole toolchain unless the process ownership changed.
+Use a persistent `node_repl` Playwright session to debug local web or Electron apps, keep the same handles alive across iterations, and run the applicable functional and visual checks without restarting the whole toolchain unless the process ownership changed.
 
 ## Preconditions
 
@@ -13,7 +13,9 @@ Use a persistent `node_repl` Playwright session to debug local web or Electron a
 - If it is not exposed directly, use tool discovery for `node_repl js`. Do not treat a deferred tool as unavailable until discovery has been attempted.
 - If Playwright is installed in a workspace-specific `node_modules` directory that the persistent kernel cannot resolve, add that absolute directory with `mcp__node_repl__js_add_node_module_dir` before importing `playwright`.
 - Interactive browser or Electron control requires explicit authorization in the current request. A request to interactively debug or QA that target counts; a read-only diagnosis or review does not.
-- For now, this workflow requires sandboxing to be disabled: start Codex with `--sandbox danger-full-access` (or the equivalent config for `sandbox_mode=danger-full-access`). Never weaken the sandbox or restart with broader permissions automatically. If the current session does not meet this requirement, explain it and wait for the user to authorize the permission change.
+- Work within the current session's effective tool permissions and the authorized target operations. A sandbox mode name such as `workspace-write` alone does not establish whether a dependency check or connection is available; disabling sandboxing is not a prerequisite. Perform authorized checks or attachment when the tool and host allow them; do not probe an explicitly prohibited operation.
+- If an operation encounters a permission denial or an explicit tool/host restriction, report the exact operation, target, error or restriction, and dependent steps that are blocked. Pause only those steps and continue independent authorized checks. A missing dependency, connection failure, or launch failure alone does not prove a sandbox restriction. Request narrowly scoped authorization only when a verified permission gap requires it and the host supports that remedy.
+- Never change sandbox settings or configuration, restart with broader permissions, or bypass restrictions automatically. UI control, process startup/shutdown, and configuration changes retain their existing authorization requirements; this Skill grants none of those permissions.
 - Run setup from the same project directory you need to debug.
 - Treat `mcp__node_repl__js_reset` as a recovery tool, not routine cleanup. Resetting the kernel destroys your Playwright handles.
 
@@ -27,15 +29,15 @@ Missing dependencies use the project's installation or rebuild workflow under th
 
 1. Write a brief QA inventory scoped to this change, affected shared paths, and the claims in the final response. A whole-product inventory is needed only for whole-product QA; report unrelated existing defects without expanding implementation scope. Before testing:
    - Build one shared functional and visual coverage list from the user's requirements, implemented user-visible behavior, and intended final claims. List each claim, meaningful control or mode, and the state or view changes it can cause; each must map to a QA check before signoff.
-   - For each claim or control-state pair, record the functional check, the state for visual inspection, and the evidence to capture. Turn visually central subjective requirements into observable checks.
+   - Distinguish functional/state/performance claims from visual claims. For each relevant claim or control-state pair, select the necessary check and evidence; only visual claims need visual inspection. One inspected image can support several related claims. Turn visually central subjective requirements into observable checks; do not create another image ledger.
    - Add exploratory or off-happy-path scenarios only for concrete risks in the affected behavior; there is no fixed scenario quota.
 2. Run the bootstrap cell once.
 3. Determine the project startup path and whether this task owns the runtime or only attaches to it.
 4. Start or attach through that path and keep reusing the same Playwright handles.
 5. After each code change, reload for renderer-only changes or relaunch for main-process/startup changes.
 6. Run functional QA with normal user input.
-7. Run a separate visual QA pass.
-8. Verify viewport fit and capture the screenshots needed to support your claims.
+7. Run visual QA when an unresolved visual claim or required visual acceptance needs it; retain valid unaffected evidence.
+8. Verify viewport fit when the contract or a concrete layout risk requires it, and capture only evidence needed for unresolved claims.
 9. Clean up the Playwright session only when the task is actually finished.
 
 ## Runtime references
@@ -82,9 +84,9 @@ Read only the branch needed for this task; reuse loaded instructions while the s
 
 ### Visual QA
 
-- Treat visual QA as separate from functional QA.
+- Treat visual QA as distinct evidence from functional QA, not a mandatory new pass after every functional change. Scope it to affected regions, states and shared layout; expand for a concrete propagated effect or defect.
 - Use the same shared QA inventory defined before testing and updated during QA; do not start visual coverage from a different implicit list.
-- Restate the user-visible claims and verify each one explicitly; do not assume a functional pass proves a visual claim.
+- Verify scoped visual claims explicitly; functional results do not automatically need screenshots and do not prove appearance. Apply the [shared visual evidence method](../../resident/ddd-implement/references/testing.md#select-visual-evidence) to capture, model inspection and reuse.
 - A user-visible claim is not signed off until it has been inspected in the specific state where it is meant to be perceived.
 - Inspect the initial viewport before scrolling.
 - Confirm that the initial view visibly supports the interface's primary claims; if a core promised element is not clearly perceptible there, treat that as a bug.
@@ -94,34 +96,35 @@ Read only the branch needed for this task; reuse loaded instructions while the s
 - If labels, overlays, annotations, guides, or highlights are meant to track changing content, verify that relationship after the relevant state change.
 - For dynamic or interaction-dependent visuals, inspect long enough to judge stability, layering, and readability; do not rely on a single screenshot for signoff.
 - For interfaces that can become denser after loading or interaction, inspect the densest realistic state you can reach during QA, not only the empty, loading, or collapsed state.
-- If the product has a defined minimum supported viewport or window size, run a separate visual QA pass there; otherwise, choose a smaller but still realistic size and inspect it explicitly.
+- Check additional viewport/window sizes only when the approved contract or a concrete adaptation risk requires them. Preserve fixed-window constraints; do not invent a smaller size or repeat a valid minimum-size check without relevant change.
 - Distinguish presence from implementation: if an intended affordance is technically there but not clearly perceptible because of weak contrast, occlusion, clipping, or instability, treat that as a visual failure.
 - If any required visible region is clipped, cut off, obscured, or pushed outside the viewport in the state you are evaluating, treat that as a bug even if page-level scroll metrics appear acceptable.
 - Look for clipping, overflow, distortion, layout imbalance, inconsistent spacing, alignment problems, illegible text, weak contrast, broken layering, and awkward motion states.
 - Judge aesthetic quality as well as correctness. The UI should feel intentional, coherent, and visually pleasing for the task.
 - Prefer viewport screenshots for signoff. Use full-page captures only as secondary debugging artifacts, and capture a focused screenshot when a region needs closer inspection.
 - If motion makes a screenshot ambiguous, wait briefly for the UI to settle, then capture the image you are actually evaluating.
-- Before signoff, explicitly ask: what visible part of this interface have I not yet inspected closely?
-- Before signoff, explicitly ask: what visible defect would most likely embarrass this result if the user looked closely?
+- Before signoff, check whether any scoped visual claim still lacks valid evidence; stop once it is established. Do not broaden coverage because a phase ended or some unrelated part has not been inspected.
 
 ### Signoff
 
+Apply checks to the approved change and its actual claims. A functional-only task does not acquire a new visual signoff; reuse valid visual evidence where relevant instead of rereading it automatically.
+
 - The functional path passed with normal user input.
 - Coverage is explicit against the shared QA inventory: note which requirements, implemented features, controls, states, and claims were exercised, and call out any intentional exclusions.
-- The visual QA pass covered the whole relevant interface.
-- Each user-visible claim has a matching visual check and reviewed screenshot artifact from the state and viewport or window size where that claim matters.
-- The viewport-fit checks passed for the intended initial view and any required minimum supported viewport or window size.
-- If the product launches in a window, the as-launched size, placement, and initial layout were checked before any manual resize or repositioning.
-- The UI is not just functional; it is visually coherent and not aesthetically weak for the task.
-- Functional correctness, viewport fit, and visual quality must each pass on their own; one does not imply the others.
+- Applicable visual QA covered the affected visual claims; disclose reused evidence and exclusions without claiming uninspected scope passed.
+- Each visual claim has valid inspected evidence from the relevant state and viewport/window size. An image may support multiple claims; saved artifacts need not all be emitted to the model. Functional-only claims need their corresponding functional evidence.
+- Applicable viewport-fit checks passed for the intended view and contractually required sizes.
+- When launch geometry is affected or required, the as-launched size, placement and initial layout were checked before manual resizing or repositioning.
+- Assessed visual changes are coherent and meet the approved visual quality requirements.
+- Functional correctness, viewport fit and visual quality each need their own evidence when claimed; one does not imply the others.
 - Any risk-triggered exploratory pass is complete; report its scope when relevant to the result.
 - If screenshot review and numeric checks disagreed at any point, the discrepancy was investigated before signoff; visible clipping in screenshots is a failure to resolve, not something metrics can overrule.
 - Include a brief negative confirmation of the main defect classes you checked for and did not find.
 - Cleanup was executed, or you intentionally kept the session alive for further work.
 
-## Viewport Fit Checks (Required)
+## Viewport Fit Checks (When Required)
 
-Do not assume a screenshot is acceptable just because the main widget is visible. Before signoff, explicitly verify that the intended initial view matches the product requirement, using both screenshot review and numeric checks.
+Use these checks for an approved viewport-fit requirement or concrete layout risk, reusing valid unaffected evidence. Do not assume a screenshot is acceptable just because the main widget is visible. A new fit claim needs actual screenshot review with supporting bounds, not a functional pass alone.
 
 - Define the intended initial view before signoff. For scrollable pages, this is the above-the-fold experience. For app-like shells, games, editors, dashboards, or tools, this is the full interactive surface plus the controls and status needed to use it.
 - Use screenshots as the primary evidence for fit. Numeric checks support the screenshots; they do not overrule visible clipping.

@@ -55,13 +55,11 @@ python scripts/build_report_pdf.py <report.md> -o <临时工作目录/report.pdf
 
 ### 报告构建摘要
 
-`build_report_pdf.py`默认渲染全部页面，但自动render check只能作为辅助证据；摘要中的`visual_inspection_status`保持`pending`且`visually_inspected_page_numbers`保持为空，直到Agent实际查看。逐页检查完成后，在同一最终版本的构建摘要中把状态记为`complete`并写入实际检查页码；只检查部分页面时记为`partial`，不得作为正式交付验收。
+`build_report_pdf.py` may render all pages, but rendering alone is supporting evidence. Keep `visual_inspection_status=pending` and `visually_inspected_page_numbers` empty until actual inspection. Use `complete` only for actual all-page coverage of that final identity; sampled coverage stays `partial` with the true inspected page numbers. Partial visual coverage can satisfy approved sampled acceptance, never an explicit full-page contract or a claim that every page is visually correct. Keep the approved scope in the existing report; do not fabricate summary results.
 
 ## 共同验收
 
-构建成功不等于验收通过。必须渲染 PDF 页面并检查实际输出。
-
-正式交付必须生成最终版本全部页面的检查图并逐页检查。预览时可显式使用抽样渲染，但抽样结果不得作为正式交付验收；格式修复后可以只复查受影响页，前提是同一最终版本已有可追溯的完整页面覆盖。交付结果必须区分PDF构建完成、已渲染页和实际检查页；报告生成器的摘要字段按上文记录。按适用合同确认：
+Construction success is not acceptance. Render and inspect actual PDF output using [visual inspection](review.md#visual-inspection). Default formal delivery uses structural checks plus risk-based visual sampling; explicit full-page acceptance, unbounded impact or widespread defects still requires all pages. Separate construction, generated images and actual inspected pages; generating all images does not require sending all to the model. Reuse only evidence supported by unchanged content and pagination mappings. The summary records actual coverage as above. Check applicable requirements within the approved scope:
 
 - 中文无乱码/黑方块；
 - 现有章节分页正确；合同需要封面、摘要或目录时检查对应页面，不因检查项而新增章节；

@@ -2,6 +2,8 @@
 
 Use the smallest preview that lets the user judge the real design decision. Distinguish the artifact the user can operate from evidence used to inspect it. `ddd-design` owns the preview mode and approval threshold. A routed specialist may produce or verify evidence but cannot lower the threshold or approve the design.
 
+The synchronized [Chinese review copy](preview-contract_zh.md) is for human review, not additional execution guidance.
+
 Before creating or modifying preview files or supporting evidence, apply [design approval](../../ddd-flow/references/design-approval.md): present the concrete preview plan and identify explicit write authorization or valid bounded autonomy. A request for UI design, a format conversion or feedback alone does not grant that permission. Resolve uncertain interpretations before dependent writes; the operable-preview requirement does not bypass approval.
 
 ## Preview modes
@@ -124,6 +126,8 @@ docs/design/prototypes/
 ```
 
 Keep the review entry, required documents, authoring source, necessary assets, representative mock data and any reproducible build instructions in Git. Do not add raw-data dumps or screenshot directories to the prototype bundle. Authorized evidence captures remain in the project's task-scoped evidence location. Existing paths are not an exemption from this layout; migrate the prototype involved in the authorized work as described below, preserving historical references and unrelated files.
+
+When Product Design is selected, read [its handoff adapter](product-design-handoff.md) before dependent creation or verification. Its actual authoring/runtime root, required QA location, dependencies and outputs must be covered by the preview plan. `src/` is a candidate authoring root whose compatibility needs actual authorized evidence, not a prevalidated plugin setting. A provider-required QA report can remain at that resolved root as authored QA evidence with a task pointer; raw captures remain in the task evidence location. Provider QA, final direct-offline operation, native annotations and user approval remain separate claims. Neither a development server nor source existence replaces the sole final entry or its required evidence.
 
 `index.html`, `README.md` and `交互设计.md` are required even when the HTML entry contains all presentation code and example data. Create the listed optional subdirectories only when they have content. Keep sample data needed by the direct-open interaction embedded in `index.html` or packaged without network/file API dependencies; `examples/` is for supplementary evidence, not a required fetch target. If another document already owns the UI design facts, make `交互设计.md` a concise pointer to that owner and reviewed revision rather than duplicating its specification. Keep engineering or functional experiments outside this interface artifact, with their own stated launch and behavior contract; a server, build dependency or business handler never becomes part of the independent HTML deliverable through colocation.
 

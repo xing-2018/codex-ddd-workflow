@@ -95,6 +95,6 @@ Word界面会本地化样式名。根据样式ID、快速样式标记`w:qFormat`
 
 6. 模板哈希记录来源身份；成品按XML语义比较基础部件，忽略前缀、属性顺序、排版空白和明确编辑身份标记，不忽略真实字体、样式、主题或编号变化。检查相关容器、正文分类、有效字体／字号／颜色、段落属性、标题编号、完整域、TOC域内缓存与当前标题／层级／锚点关系，以及覆盖和适配。未识别用途或无法解析的必需属性要报告，不视为正确。
 7. `passed`和退出码只表示结构检查，不是整体交付验收。JSON标明`validation_scope=structure_only`；视觉、实际页码和纯格式处理的内容保护均为`not_checked`，不手写通过结果代替证据。
-8. 使用文档技能渲染全部页面，逐页核对实际字体替代、标题正文、目录页码、表格宽度／换行／跨页及题注。纯格式处理还需比较前后有效内容，结构脚本不能证明内容等价。缺少刷新或视觉能力时保留缺口，不宣称实际页码正确或整体通过。
+8. Apply [visual inspection](review.md#visual-inspection) to actual fonts, headings, TOC/page numbers, table width/wrapping/page breaks and captions. Use risk-based page selection by default; retain explicit full-page coverage and expand when impact cannot be bounded. Pass that scope to the document Skill. Rendering all pages does not require reading every image. Format-only work also compares effective content; structure does not establish equivalence. Disclose actual inspected pages and missing refresh/visual capability without claiming unverified pagination or all-page correctness.
 
 出现基础版式实质漂移、未经允许的覆盖、错误段落用途／编号、覆盖未满足、域或关系风险，或缺少必需内容／视觉证据时，不得宣称交付完成。修复只重做失效检查，复用仍有效证据。

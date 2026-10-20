@@ -6,13 +6,13 @@
 - Goal and whole-change acceptance: <outcome and criteria>
 - Authority and permission: <design/requirements paths and identities; actual approval; scope and exclusions>
 - Baseline and current changes: <starting revision and relevant dirty-file identities; current diff or commit>
-- Accepted results and valid evidence: <completed outcomes; evidence pointers and applicability; unresolved acceptance>
+- Accepted results and valid evidence: <completed outcomes; candidate and evidence pointers with applicability; on revision, exact changes, invalidated conclusions and retained evidence; unresolved acceptance>
 - Reusable commands, when needed: <verified entry, working directory and applicability, or an explicit pointer>
 - Active operations: <owner/handle, last verified state and evidence; none or unknown when applicable>
 - Blockers and failures: <missing condition or unresolved failure and affected work>
 - Next action: <one concrete ready step or missing condition>
 
-Keep this summary current under [the recovery rules](../references/execution.md#resume-from-durable-evidence). Existing records may retain their structure. Omit optional sections below when they add no needed fact; keep design and full evidence at their existing owners.
+Keep this summary current under [project recovery](../references/recovery.md); use [attempt recovery](../references/execution.md#resume-from-durable-evidence) only for unresolved worker facts. Existing records may retain their structure. Include reusable commands or active handles only when they help the next action; keep no loaded-file inventory. Omit optional sections below when they add no needed fact; keep design and full evidence at their existing owners.
 
 ## Tasks (only for multiple tasks with real dependencies)
 

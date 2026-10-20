@@ -1,6 +1,6 @@
 # Design Approval and Evidence Permission
 
-Read when preparing an initial design or semantic delta, resolving authority or persistence uncertainty, or preparing temporary evidence outside authorized implementation. Read before a design-only UI preview. This reference elaborates applicable AGENTS permissions; it grants no exception to host or tool restrictions.
+Read when preparing an initial design or semantic delta, resolving authority or persistence uncertainty, or preparing temporary evidence outside authorized implementation. Read before a design-only UI preview. The entry's [Shared contract](../SKILL.md#shared-contract) owns cross-entry guards and continuation; supplement only missing clauses without rerouting. This reference elaborates applicable AGENTS permissions; it grants no exception to host or tool restrictions.
 
 ## Prepare and approve
 
